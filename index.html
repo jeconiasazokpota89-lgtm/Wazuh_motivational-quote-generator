@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wazuh - Plateforme de Motivation</title>
+    <script src="script.js" defer></script>
+</head>
+<style>
+    :root {
+        --bg-gradient-start: #0f172a;
+        --bg-gradient-end: #1e3a8a;
+        --bg-dark: rgba(255,255,255,0.95);
+        --text-primary: #0f172a;
+        --text-secondary: #334155;
+        --header-gradient-start: #2563eb;
+        --header-gradient-end: #3b82f6;
+        --text-header: white;
+        --footer-text: #e5e7eb;
+        --border-color: #cbd5e1;
+    }
+
+    body.dark-mode {
+        --bg-gradient-start: #1a1a2e;
+        --bg-gradient-end: #16213e;
+        --bg-dark: #2d2d44;
+        --text-primary: #e0e0e0;
+        --text-secondary: #b0b0b0;
+        --header-gradient-start: #1a3a52;
+        --header-gradient-end: #0f5a7a;
+        --text-header: #ffffff;
+        --footer-text: #808080;
+        --border-color: #555555;
+    }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 30px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* CONTENEUR */
+main {
+    max-width: 750px;
+    margin: auto;
+}
+
+/* HEADER */
+header {
+    background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
+    color: var(--text-header);
+    padding: 35px;
+    border-radius: 14px;
+    text-align: center;
+    margin-bottom: 30px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    animation: fadeDown 0.8s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.header-content {
+    flex: 1;
+    min-width: 200px;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+}
+
+header p {
+    opacity: 0.9;
+}
+
+#toggleTheme {
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.5);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: auto;
+    white-space: nowrap;
+}
+
+#toggleTheme:hover {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.05);
+}
+
+.nav-link {
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.5);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.nav-link:hover {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.05);
+}
+
+/* CARTES */
+section {
+    background: var(--bg-dark);
+    padding: 30px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    animation: fadeUp 0.8s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode section {
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+section h2 {
+    color: var(--text-primary);
+}
+
+/* MESSAGE */
+#message {
+    font-size: 1.4rem;
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 25px;
+    color: var(--text-primary);
+}
+
+/* BOUTONS */
+button,
+input[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(34,197,94,0.4);
+}
+
+/* FORMULAIRE */
+form label {
+    display: block;
+    margin-top: 20px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+form input,
+form select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+form input:focus,
+form select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+}
+
+/* MESSAGE RÉSULTAT */
+#result {
+    margin-top: 20px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+/* LISTE DES UTILISATEURS */
+#usersList {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(0,0,0,0.05);
+    border-radius: 8px;
+}
+
+body.dark-mode #usersList {
+    background: rgba(255,255,255,0.05);
+}
+
+.user-item {
+    padding: 8px;
+    margin: 5px 0;
+    background: #f3f4f6;
+    border-left: 4px solid #22c55e;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    color: #000;
+}
+
+body.dark-mode .user-item {
+    background: #3a3a52;
+    color: #e0e0e0;
+    border-left-color: #22c55e;
+}
+
+#usersCount {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #22c55e;
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    margin-top: 40px;
+    color: var(--footer-text);
+    transition: color 0.3s ease;
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    body {
+        padding: 15px;
+    }
+
+        header {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        #toggleTheme {
+            width: 100%;
+        }
+    }
+</style>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Bienvenue sur Wazuh</h1>
+            <p>Wazuh est une plateforme de motivation journalière</p>
+            <p>Un message peut changer ton état d'esprit.</p>
+        </div>
+        <div class="header-buttons">
+            <button id="toggleTheme">🌙 Sombre</button>
+            <a href="historique.html" class="nav-link">📖 Historique</a>
+        </div>
+    </header>
+<main>
+    <section>
+        <p id="message">Croyez en vous et tout sera possible.</p>
+        <button id="changeMessage">Changer de message</button>
+    </section>
+    <section>
+        <h2>Intéressé? Inscrivez-vous pour plus de motivation</h2>
+        <form action="#" method="post" id="form">
+            <label for="name">Nom:</label>
+                <input type="text" id="name" name="name" placeholder="Entrez votre Nom" required>
+
+                <label for="prenom">Prénom:</label>
+                <input type="text" id="prenom" name="prenom" placeholder="Entrez votre Prénom" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="alpha@gmail.com" required>
+
+                <label for="password">Mot de passe:</label>
+                <input type="password" id="password" name="password" placeholder="Mot de passe" required>
+
+            <label for="confirmPassword">Confirmer le mot de passe:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirmez" required>
+
+            <label for="préférencemessage">Préférences de message:</label>
+            <select id="préférencemessage" name="préférencemessage" required>
+                <option value="motivation">Motivation</option>
+                <option value="inspiration">Inspiration</option>
+                <option value="confiance">Confiance en soi</option>
+            </select>
+
+            <input type="submit" value="S'inscrire">
+        </form>
+        <p id="result"></p>
+        <div id="usersList"></div>
+        <p id="usersCount"></p>
+    </section>
+</main>
+<footer>
+    &copy; 2024 Wazuh. Tous droits réservés.
+</footer>
+</body>
+</html>

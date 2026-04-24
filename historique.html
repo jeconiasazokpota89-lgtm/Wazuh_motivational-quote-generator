@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique des Citations - Wazuh</title>
+    <script src="historique.js" defer></script>
+</head>
+<style>
+    :root {
+        --bg-gradient-start: #0f172a;
+        --bg-gradient-end: #1e3a8a;
+        --bg-dark: rgba(255,255,255,0.95);
+        --text-primary: #0f172a;
+        --text-secondary: #334155;
+        --header-gradient-start: #2563eb;
+        --header-gradient-end: #3b82f6;
+        --text-header: white;
+        --footer-text: #e5e7eb;
+        --border-color: #cbd5e1;
+    }
+
+    body.dark-mode {
+        --bg-gradient-start: #1a1a2e;
+        --bg-gradient-end: #16213e;
+        --bg-dark: #2d2d44;
+        --text-primary: #e0e0e0;
+        --text-secondary: #b0b0b0;
+        --header-gradient-start: #1a3a52;
+        --header-gradient-end: #0f5a7a;
+        --text-header: #ffffff;
+        --footer-text: #808080;
+        --border-color: #555555;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+        color: var(--text-primary);
+        min-height: 100vh;
+        padding: 30px;
+        transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    main {
+        max-width: 900px;
+        margin: auto;
+    }
+
+    header {
+        background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
+        color: var(--text-header);
+        padding: 35px;
+        border-radius: 14px;
+        text-align: center;
+        margin-bottom: 30px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+        animation: fadeDown 0.8s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .header-content {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    header h1 {
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+    }
+
+    header p {
+        opacity: 0.9;
+    }
+
+    .header-buttons {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    #toggleTheme {
+        background: rgba(255,255,255,0.2);
+        border: 2px solid rgba(255,255,255,0.5);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        width: auto;
+        white-space: nowrap;
+    }
+
+    #toggleTheme:hover {
+        background: rgba(255,255,255,0.3);
+        transform: scale(1.05);
+    }
+
+    .nav-link {
+        background: rgba(255,255,255,0.2);
+        border: 2px solid rgba(255,255,255,0.5);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .nav-link:hover {
+        background: rgba(255,255,255,0.3);
+        transform: scale(1.05);
+    }
+
+    section {
+        background: var(--bg-dark);
+        padding: 30px;
+        border-radius: 14px;
+        margin-bottom: 25px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        animation: fadeUp 0.8s ease;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-mode section {
+        box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    section h2 {
+        color: var(--text-primary);
+        margin-bottom: 20px;
+    }
+
+    .filters {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        padding: 8px 15px;
+        background: #ddd;
+        border: 2px solid #bbb;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+    }
+
+    body.dark-mode .filter-btn {
+        background: #444;
+        border-color: #666;
+        color: #e0e0e0;
+    }
+
+    .filter-btn.active {
+        background: #22c55e;
+        border-color: #16a34a;
+        color: white;
+    }
+
+    #citationsList {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 15px;
+    }
+
+    .citation-card {
+        background: #f9fafb;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #2563eb;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    body.dark-mode .citation-card {
+        background: #3a3a52;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .citation-text {
+        font-style: italic;
+        margin-bottom: 10px;
+        color: var(--text-primary);
+    }
+
+    .citation-mood {
+        display: inline-block;
+        padding: 4px 8px;
+        background: #e0e7ff;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #1e3a8a;
+    }
+
+    body.dark-mode .citation-mood {
+        background: #2d3748;
+        color: #90cdf4;
+    }
+
+    #emptyMessage {
+        text-align: center;
+        padding: 40px;
+        color: #888;
+    }
+
+    .clear-btn {
+        padding: 10px 20px;
+        background: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .clear-btn:hover {
+        background: #dc2626;
+        transform: scale(1.05);
+    }
+
+    footer {
+        text-align: center;
+        margin-top: 40px;
+        color: var(--footer-text);
+        transition: color 0.3s ease;
+    }
+
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 600px) {
+        header h1 {
+            font-size: 1.8rem;
+        }
+
+        body {
+            padding: 15px;
+        }
+
+        header {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .header-buttons {
+            width: 100%;
+            flex-direction: column;
+        }
+
+        #toggleTheme {
+            width: 100%;
+        }
+
+        .nav-link {
+            width: 100%;
+            text-align: center;
+        }
+
+        #citationsList {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>📖 Historique des Citations</h1>
+            <p>Toutes vos citations préférées en un seul endroit</p>
+        </div>
+        <div class="header-buttons">
+            <button id="toggleTheme">🌙 Sombre</button>
+            <a href="index.html" class="nav-link">🏠 Accueil</a>
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <h2>Filtrer par catégorie</h2>
+            <div class="filters">
+                <button class="filter-btn active" data-mood="all">✨ Toutes</button>
+                <button class="filter-btn" data-mood="motivation">🎯 Motivation</button>
+                <button class="filter-btn" data-mood="inspiration">✨ Inspiration</button>
+                <button class="filter-btn" data-mood="confiance">💪 Confiance</button>
+            </div>
+        </section>
+
+        <section>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>Citations sauvegardées</h2>
+                <button class="clear-btn" id="clearBtn">🗑️ Effacer l'historique</button>
+            </div>
+            <div id="citationsList"></div>
+            <p id="emptyMessage" style="display:none;">Aucune citation pour l'instant. Allez afficher des citations!</p>
+        </section>
+    </main>
+
+    <footer>
+        &copy; 2024 Wazuh. Tous droits réservés.
+    </footer>
+</body>
+</html>
